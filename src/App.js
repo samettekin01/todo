@@ -1,23 +1,71 @@
-import logo from './logo.svg';
+import { useRef, useState } from 'react';
+import { BsXSquare } from 'react-icons/bs';
 import './App.css';
 
 function App() {
+  const [todo, setTodo] = useState("");
+  const [todoList, setTodoList] = useState([]);
+  const todoRef = useRef();
+
+  document.addEventListener("keypress", () => {
+    todoRef.current.focus();
+  });
+
+  const addTodo = () => {
+    if (!todo) {
+      alert("Please, Add todo");
+      return;
+    }
+    const item = {
+      todo: todo,
+      done: false
+    };
+    setTodoList(prev => [...prev, item]);
+    setTodo("");
+    todoRef.current.focus();
+  }
+
+  const doneTodo = (i) => {
+    const updatedList = todoList.map((item, index) =>
+      index === i ? { ...item, done: !item.done } : item
+    );
+    setTodoList(updatedList);
+  }
+  const remove = (i) => {
+    const list = [...todoList];
+    list.splice(i, 1);
+    setTodoList(list);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App flex justify-center">
+      <div className='w-80 text-center mt-10'>
+        <span className='text-2xl text-white'>TODO LIST</span>
+        <input
+          ref={todoRef}
+          type='text'
+          placeholder='add todo'
+          className='outline rounded-sm m-3 p-1 outline-1 w-64 shadow-xl'
+          value={todo}
+          onChange={e => setTodo(e.target.value)}
+        />
+        <button
+          className='outline outline-1 rounded-sm p-1 shadow-xl bg-sky-800 text-white active:opacity-80'
+          onClick={addTodo}>Add</button>
+        <div className='ml-2 text-left overflow-auto h-96 items-center relative'>
+          {todoList && todoList.map((data, i) =>
+            <div
+              className='p-1 mb-2 flex items-center  bg-sky-800 text-white rounded-sm shadow-xl border'
+              key={i}
+            ><div
+              className='w-5/6'
+              onClick={() => doneTodo(i)}
+              style={{ textDecoration: data.done ? "line-through" : "none" }}
+            >{data.todo}</div><div className='ml-auto text-2xl cursor-pointer'><BsXSquare className='active:text-red-700' onClick={() => remove(i)} /></div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
