@@ -34,7 +34,7 @@ function App() {
   }
   const handleEdit = (i) => {
     const list =[...todoList];
-    todo ? list[i].todo = todo : alert("Please, add todo")
+    todo ? list[i].todo = todo : alert("Please, enter text for change")
     setTodoList(list)
   }
 
