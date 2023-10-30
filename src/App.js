@@ -1,15 +1,11 @@
 import { useRef, useState } from 'react';
-import { BsXSquare } from 'react-icons/bs';
+import { BsPencilSquare, BsXSquare } from 'react-icons/bs';
 import './App.css';
 
 function App() {
   const [todo, setTodo] = useState("");
   const [todoList, setTodoList] = useState([]);
   const todoRef = useRef();
-
-  document.addEventListener("keypress", () => {
-    todoRef.current.focus();
-  });
 
   const addTodo = () => {
     if (!todo) {
@@ -36,6 +32,11 @@ function App() {
     list.splice(i, 1);
     setTodoList(list);
   }
+  const handleEdit = (i) => {
+    const list =[...todoList];
+    todo ? list[i].todo = todo : alert("Please, add todo")
+    setTodoList(list)
+  }
 
   return (
     <div className="App flex justify-center">
@@ -57,11 +58,16 @@ function App() {
             <div
               className='p-1 mb-2 flex items-center  bg-sky-800 text-white rounded-sm shadow-xl border'
               key={i}
-            ><div
-              className='w-5/6'
-              onClick={() => doneTodo(i)}
-              style={{ textDecoration: data.done ? "line-through" : "none" }}
-            >{data.todo}</div><div className='ml-auto text-2xl cursor-pointer'><BsXSquare className='active:text-red-700' onClick={() => remove(i)} /></div>
+            >
+              <div
+                className='w-5/6'
+                onClick={() => doneTodo(i)}
+                style={{ textDecoration: data.done ? "line-through" : "none" }}
+              >{data.todo}</div>
+              <div className='flex flex-row ml-auto text-2xl cursor-pointer'>
+                <BsPencilSquare className='active:text-red-700' onClick={() => handleEdit(i)} />
+                <BsXSquare className='active:text-red-700' onClick={() => remove(i)} />
+              </div>
             </div>
           )}
         </div>
